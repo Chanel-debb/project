@@ -1,0 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Gidole&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Italianno&family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
+@import "tailwindcss";
+
+.img-bg {
+    background-image: url('./assets/Sw7.jpg') no-repeat;
+    background-size: cover;
+}
