@@ -1,10 +1,18 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
+import { useEffect } from "react";
 
 const Navbar = ({ fixed = true }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+ useEffect(() => {
+   const token = localStorage.getItem("access_token");
+   if (token) {
+     setIsAuthenticated(true);
+   }
+ })
 
   return (
     <div

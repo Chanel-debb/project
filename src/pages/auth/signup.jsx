@@ -1,43 +1,81 @@
 import { useEffect, useState } from "react";
 import Navbar from "../../components/navbar";
 import Image7 from "../../../public/image/Page name/7.png";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { FaSpinner } from "react-icons/fa";
 
 const SignUp = () => {
-  const [fullName, setFullName] = useState();
-  const [gender, setGender] = useState();
-  const [dateOfBirth, setDateOfBirth] = useState();
-  const [address, setAddress] = useState();
+  const [firstName, setFirstName] = useState();
+  const [lastName, setLastName] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
-  const [loading, setLoading] = useState(true);
+  const [confirmPassword, setConfirmPassword] = useState();
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
 
-    const formData = {
-      fullName: fullName,
-      gender: gender,
-      dateOfBirth: dateOfBirth,
-      address: address,
-      email: email,
-      password: password,
-    };
-    if (password === password) {
-      console.log(formData);
-    } else {
-      alert("information incorrect!");
+    // Basic client-side validation
+    if (!email || !password || !firstName || !lastName) {
+      toast.error("Please fill in all fields.");
+      return;
     }
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match!");
+      return;
+    }
+
+    setLoading(true);
+
+    const protocol = "https://";
+    const baseUrl = "electronic-gertrudis-chanel-debb-bad97784.koyeb.app";
+    const url = `${protocol}${baseUrl}/auth/register`;
+
     try {
-      const response = await fetch();
-      const data = await response.json();
-      setProduct(data);
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+          firstName,
+          lastName,
+        }),
+      });
+
+      let data;
+      try {
+        data = await response.json();
+      } catch (jsonError) {
+        throw new Error("Invalid server response. Please try again later.");
+      }
+
+      console.log("Server response:", data);
+
+      if (response.status !== 201) {
+        // Server responded with an error
+        throw new Error(data);
+      }
+
+      // Success
+      toast.success("Registration successful! Please log in.");
+      localStorage.setItem("access_token", data.access_token); // Assuming the token is returned
+    
+      navigate("/"); // Redirect to login page
     } catch (error) {
-      setError(error);
+      console.error("Signup error:", error);
+      toast.error(error.message || "Registration failed. Please try again.");
     } finally {
       setLoading(false);
     }
   };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -50,70 +88,35 @@ const SignUp = () => {
                 Create an account
               </h2>
 
-              <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5 ">
+              <form onSubmit={handleSignup} className="space-y-4 sm:space-y-5 ">
                 {/* Full Name */}
-                <div>
-                  <label className="block text-sm sm:text-base font-medium text-gray-700 mb-1">
-                    FULL NAME
-                  </label>
-                  <input
-                    type="text"
-                    value={fullName}
-                    placeholder="Enter your name"
-                    onChange={(e) => setFullName(e.target.value)}
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
-                    required
-                  />
-                </div>
-
-                {/* Gender and DOB in one row on larger screens */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {/* Gender */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm sm:text-base font-medium text-gray-700 mb-1">
-                      GENDER
-                    </label>
-                    <select
-                      value={gender}
-                      onChange={(e) => setGender(e.target.value)}
-                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
-                      required
-                    >
-                      <option value="">Select gender</option>
-                      <option value="male">Male</option>
-                      <option value="female">Female</option>
-                      <option value="other">Other</option>
-                    </select>
-                  </div>
-
-                  {/* Date of Birth */}
-                  <div>
-                    <label className="block text-sm sm:text-base font-medium text-gray-700 mb-1">
-                      DATE OF BIRTH
+                      FIRST NAME
                     </label>
                     <input
-                      type="date"
-                      value={dateOfBirth}
-                      onChange={(e) => setDateOfBirth(e.target.value)}
+                      type="text"
+                      value={firstName}
+                      placeholder="Enter your name"
+                      onChange={(e) => setFirstName(e.target.value)}
                       className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
                       required
                     />
                   </div>
-                </div>
 
-                {/* Address */}
-                <div>
-                  <label className="block text-sm sm:text-base font-medium text-gray-700 mb-1">
-                    ADDRESS
-                  </label>
-                  <input
-                    type="text"
-                    value={address}
-                    placeholder="Enter your home address"
-                    onChange={(e) => setAddress(e.target.value)}
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
-                    required
-                  />
+                  <div>
+                    <label className="block text-sm sm:text-base font-medium text-gray-700 mb-1">
+                      LAST NAME
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Last Name"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
+                    />
+                  </div>
                 </div>
 
                 {/* Email */}
@@ -141,6 +144,22 @@ const SignUp = () => {
                     value={password}
                     placeholder="Enter your password"
                     onChange={(e) => setPassword(e.target.value)}
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
+                    required
+                  />
+                </div>
+
+                {/* Confirm Password */}
+                <div>
+                  <label className="block text-sm sm:text-base font-medium text-gray-700 mb-1">
+                    CONFIRM PASSWORD
+                  </label>
+
+                  <input
+                    type="password"
+                    placeholder="Confirm your password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
                     className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
                     required
                   />
@@ -177,9 +196,13 @@ const SignUp = () => {
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg transition duration-150 ease-in-out text-sm sm:text-base"
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white text-center font-medium py-2.5 px-4 rounded-lg transition duration-150 ease-in-out text-sm sm:text-base"
                 >
-                  Create Account
+                  {loading ? (
+                    <FaSpinner className="animate-spin" />
+                  ) : (
+                    "Create Account"
+                  )}
                 </button>
               </form>
 

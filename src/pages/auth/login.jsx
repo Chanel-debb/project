@@ -1,26 +1,55 @@
 // import {useState, useEffect} from "react"
 import { useEffect, useState } from "react";
-import Navbar from "../../components/navbar"
+import Navbar from "../../components/navbar";
 import Image2 from "../../../public/image/image2.png";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Login = () => {
- const[email, setEmail]= useState();
- const [password, setPassword]= useState();
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
- const handleSubmit = async (e) =>{
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  e.preventDefault();
+    const formData = {
+      email: email,
+      password: password,
+    };
 
-  const formData={
-    email:email,
-    password:password
-  }
-  if(password === password){
-    console.log (formData)
-  }else{
-    alert('password not correct!')
-  }
- }
+    try {
+      const response = await fetch(
+        "https://electronic-gertrudis-chanel-debb-bad97784.koyeb.app/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        }
+      );
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Login failed");
+      }
+
+      // Assuming the response contains a token or user data
+      localStorage.setItem("access_token", data.access_token);
+      toast.success("Login successful!");
+      // Redirect to the dashboard or another page
+      navigate("/");
+    } catch (error) {
+      console.error("Login error:", error);
+      toast.error(error.message || error.detail || "Login failed. Please try again.");
+    } finally {
+      // Handle any final actions after login attempt
+      setLoading(false);
+    }
+  };
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
