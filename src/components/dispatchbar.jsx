@@ -4,7 +4,7 @@ const DispatchBar = () => {
   return (
     <div>
       <Navbar />
-      <div className="bg-white sticky top-0 w-full z-20 shadow-sm">
+      <div className="bg-white sticky top-6 w-full z-20 shadow-sm">
         <div className="flex flex-col md:flex-row items-center justify-between max-w-7xl 2xl:max-w-[96rem] px-4 sm:px-6 lg:px-8 mx-auto py-4">
           {/* Title */}
           <h1 className="text-blue-600 text-2xl font-semibold mb-3 md:mb-0">

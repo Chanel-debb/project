@@ -14,6 +14,12 @@ const Navbar = ({ fixed = true }) => {
    }
  })
 
+  const handleLogout = () => {
+    localStorage.removeItem("access_token");
+    setIsAuthenticated(false);
+    window.location.href = "/";
+  }
+
   return (
     <div
       className={`bg-blue-900 py-2 ${fixed ? "fixed top-0" : ""} w-full z-20`}
@@ -63,12 +69,28 @@ const Navbar = ({ fixed = true }) => {
           </div>
 
           {isAuthenticated ? (
-            <Link
-              to="/shipment-history"
-              className="text-blue-200 pl-3 text-sm font-semibold"
-            >
-              SHIPMENT HISTORY
-            </Link>
+            <>
+              <Link
+                to="/shipment-history"
+                className="text-blue-200 pl-3 text-sm font-semibold"
+              >
+                SHIPMENT HISTORY
+              </Link>
+
+              <Link
+                to="/profile"
+                className="text-blue-200 pl-3 text-sm font-semibold"
+              >
+                PROFILE
+              </Link>
+
+              <button
+                className=" bg-white text-black font-medium py-2  rounded-md px-3 ml-2 text-sm "
+                onClick={handleLogout}
+              >
+                LOGOUT
+              </button>
+            </>
           ) : (
             <div className="flex ml-4">
               <Link
@@ -120,13 +142,23 @@ const Navbar = ({ fixed = true }) => {
             </Link>
 
             {isAuthenticated ? (
-              <Link
-                to="/shipment-history"
-                className="text-blue-200 w-full text-center py-2 font-semibold"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                SHIPMENT HISTORY
-              </Link>
+              <>
+                <Link
+                  to="/shipment-history"
+                  className="text-blue-200 w-full text-center py-2 font-semibold"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  SHIPMENT HISTORY
+                </Link>
+
+                <Link
+                  to="/profile"
+                  className="text-blue-200 w-full text-center py-2 font-semibold"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  PROFILE
+                </Link>
+              </>
             ) : (
               <>
                 <Link

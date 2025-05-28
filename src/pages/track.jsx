@@ -1,7 +1,80 @@
 import { Link } from "react-router-dom";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
+import { useState } from "react";
 const Track = () => {
+  const [trackingNumber, setTrackingNumber] = useState("");
+  const [trackingInfo, setTrackingInfo] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleTrack = async () => {
+    if (!trackingNumber) {
+      setError("Please enter a tracking number.");
+      return;
+    }
+    setLoading(true);
+    setError(null);
+
+    try {
+      const protocol = "https://";
+      const baseUrl = "electronic-gertrudis-chanel-debb-bad97784.koyeb.app";
+      const url = `${protocol}${baseUrl}/dispatches/${trackingNumber}`;
+
+      const token = localStorage.getItem("access_token");
+      if (!token) {
+        setError("Not authenticated. Please log in.");
+        setLoading(false);
+        return;
+      }
+
+      console.log(url)
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        switch (response.status) {
+          case 400:
+            setError("Bad request. Please check the tracking number.");
+            break;
+          case 401:
+            setError("Unauthorized. Please log in again.");
+            break;
+          case 403:
+            setError(
+              "Forbidden. You don’t have permission to view this tracking info."
+            );
+            break;
+          case 404:
+            setError("Tracking number not found.");
+            break;
+          case 500:
+            setError("Server error. Please try again later.");
+            break;
+          default:
+            setError(`Unexpected error: ${response.statusText}`);
+            break;
+        }
+        setLoading(false);
+        return;
+      }
+
+      const data = await response.json();
+      console.log("Tracking data:", data);
+      setTrackingInfo(data);
+    } catch (err) {
+      console.error(err);
+      setError("Network error. Please check your internet connection.");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="relative">
       <Navbar />
@@ -69,9 +142,14 @@ const Track = () => {
                 id="tracking-number"
                 className="w-full py-3 px-4 border border-blue-300 rounded-md text-sm focus:ring-blue-500 focus:border-blue-500"
                 placeholder="e.g. SW123456789"
+                value={trackingNumber}
+                onChange={(e) => setTrackingNumber(e.target.value)}
               />
             </div>
-            <button className="w-full sm:w-auto py-3 px-6 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition duration-150">
+            <button
+              onClick={handleTrack}
+              className="w-full sm:w-auto py-3 px-6 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition duration-150"
+            >
               Track Package
             </button>
           </div>
@@ -81,9 +159,70 @@ const Track = () => {
             <h2 className="text-lg font-medium text-gray-900 mb-4">
               Tracking Information
             </h2>
-            <div className="text-center py-10 text-gray-500">
-              Enter a tracking number to view shipment details
-            </div>
+            {trackingInfo ? (
+              <div className="space-y-3">
+                {/* 
+                
+                {
+    "created_at": "2025-05-27T10:59:54.237867+00:00",
+    "delievery_date": "2025-05-21",
+    "updated_at": "2025-05-27T10:59:54.237886+00:00",
+    "sender_id": "65ce9ae8-6239-4be8-a319-7d8dd5a1d867",
+    "content": "string",
+    "note": "string",
+    "status": "PENDING",
+    "weight": 0,
+    "recipient_id": "8ee605e7-c82e-4cea-ab20-1b8637dc8e48",
+    "id": "96f1c688-1ca6-4841-b283-f1cc43074ff7",
+    "code": "ship_8592485378"
+}
+                
+                */}
+                <div>
+                  <p className="text-sm text-gray-500">Tracking Code</p>
+                  <p className="text-base font-semibold text-gray-700 uppercase">
+                    {trackingInfo.code}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Status</p>
+                  <p className="text-base font-semibold text-yellow-600">
+                    {trackingInfo.status}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Contents</p>
+                  <p className="text-base text-gray-700 capitalize">
+                    {trackingInfo.content || "No content specified"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Weight</p>
+                  <p className="text-base text-gray-700">{trackingInfo.weight}lbs</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Delivery Date</p>
+                  <p className="text-base text-gray-700">
+                    {new Date(trackingInfo.delievery_date).toLocaleDateString(
+                      "en-US",
+                      {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      }
+                    )}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Note</p>
+                  <p className="text-base text-gray-700 capitalize">{trackingInfo.note}</p>
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-10 text-gray-500">
+                Enter a tracking number to view shipment details
+              </div>
+            )}
           </div>
         </div>
       </section>

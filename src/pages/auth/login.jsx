@@ -4,21 +4,19 @@ import Navbar from "../../components/navbar";
 import Image2 from "../../../public/image/image2.png";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { FaSpinner } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const formData = {
-      email: email,
-      password: password,
-    };
+    setLoading(true);
 
     try {
       const response = await fetch(
@@ -31,25 +29,44 @@ const Login = () => {
           body: JSON.stringify({ email, password }),
         }
       );
-      const data = await response.json();
+
+      const data = await response.json().catch(() => ({})); // Prevent crash on non-JSON response
 
       if (!response.ok) {
-        throw new Error(data.message || "Login failed");
+        let errorMessage = "Login failed. Please try again.";
+
+        switch (response.status) {
+          case 400:
+            errorMessage = "Invalid email or password.";
+            break;
+          case 401:
+            errorMessage = "Unauthorized. Please check your credentials.";
+            break;
+          case 403:
+            errorMessage = "Access denied.";
+            break;
+          case 500:
+            errorMessage = "Server error. Please try again later.";
+            break;
+          default:
+            errorMessage = `Unexpected error (status ${response.status}).`;
+        }
+
+        throw new Error(errorMessage);
       }
 
-      // Assuming the response contains a token or user data
+      // Assuming the response contains a token
       localStorage.setItem("access_token", data.access_token);
       toast.success("Login successful!");
-      // Redirect to the dashboard or another page
-      navigate("/");
+      navigate("/"); // Redirect to homepage or dashboard
     } catch (error) {
       console.error("Login error:", error);
-      toast.error(error.message || error.detail || "Login failed. Please try again.");
+      toast.error(error.message || "Login failed. Please try again.");
     } finally {
-      // Handle any final actions after login attempt
       setLoading(false);
     }
   };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -110,25 +127,25 @@ const Login = () => {
                       Remember me
                     </label>
                   </div>
-                  <div className="text-sm">
+                  {/* <div className="text-sm">
                     <a
                       href="#"
                       className="font-medium text-blue-600 hover:text-blue-500"
                     >
                       Forgot your password?
                     </a>
-                  </div>
+                  </div> */}
                 </div>
 
                 <button
                   type="submit"
                   className="w-full bg-blue-900 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg transition duration-150 ease-in-out text-sm sm:text-base"
                 >
-                  Login
+                  {loading ? <FaSpinner className="animate-spin mx-auto" /> : "Login"}
                 </button>
               </form>
 
-              <div className="mt-6 text-center">
+              <Link to='/signUp' className="mt-6 text-center">
                 <p className="text-sm sm:text-base text-gray-600">
                   Don't have an account?{" "}
                   <a
@@ -138,7 +155,7 @@ const Login = () => {
                     Register Now
                   </a>
                 </p>
-              </div>
+              </Link>
             </div>
 
             {/* Image Section - Hidden on small screens */}

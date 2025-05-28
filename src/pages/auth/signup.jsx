@@ -199,7 +199,7 @@ const SignUp = () => {
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white text-center font-medium py-2.5 px-4 rounded-lg transition duration-150 ease-in-out text-sm sm:text-base"
                 >
                   {loading ? (
-                    <FaSpinner className="animate-spin" />
+                    <FaSpinner className="animate-spin mx-auto" />
                   ) : (
                     "Create Account"
                   )}

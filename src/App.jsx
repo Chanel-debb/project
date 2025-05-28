@@ -8,6 +8,7 @@ import Image7 from "../public/image/Page name/7.png";
 // import Image14 from "../public/image/Sw7.jpg";
 import Footer from "./components/footer.jsx";
 import Logo from "../public/image/logo/logo9.png";
+import { Link } from "react-router-dom";
 
 const App = () => {
   return (
@@ -16,55 +17,78 @@ const App = () => {
       <section className="relative w-full h-[70vh] bg-gradient-to-r from-blue-600 to-blue-400 overflow-hidden">
         <div className="absolute inset-0 bg-[url('./assets/Sw7.jpg')] bg-cover bg-center opacity-50"></div>
         <div className="relative flex items-center justify-center w-full h-full px-4">
-          <div className="w-full max-w-md bg-white/90 backdrop-blur-sm p-6 rounded-xl shadow-lg">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 text-center mb-4">
-              Track Your Delivery
+          <div className="w-full max-w-2xl bg-white/90 backdrop-blur-sm p-8 rounded-xl shadow-lg text-center">
+            <h1 className="text-3xl md:text-5xl font-bold text-gray-800 mb-6">
+              Welcome to Swift
             </h1>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <input
-                type="text"
-                placeholder="Enter your tracking number"
-                className="flex-grow py-3 px-4 border border-gray-300 bg-white text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <button className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition duration-300 ease-in-out">
-                Track
-              </button>
-            </div>
+            <p className="text-lg md:text-xl text-gray-700 mb-6 leading-relaxed">
+              Experience excellence in every delivery. We provide fast,
+              reliable, and secure shipping solutions that connect you to what
+              matters most.
+            </p>
+            <p className="text-base md:text-lg text-gray-600 mb-8">
+              Join thousands of satisfied customers who trust us with their most
+              important packages. From next-day delivery to international
+              shipping, we've got you covered.
+            </p>
+            <Link to='/about' className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition duration-300 ease-in-out transform hover:scale-105">
+              About Swift
+            </Link>
           </div>
         </div>
       </section>
 
-<section className="py-12 md:py-16 bg-white">
-  <div className="container mx-auto px-4">
-    <div className="flex justify-center mb-8">
-      <img src={Logo} alt="Swift Logo" className="w-40 md:w-48" />
-    </div>
-    
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-10">
-      <div className="overflow-hidden rounded-lg shadow-md aspect-square">
-        <img src={Image2} alt="Delivery service" className="w-full h-full object-cover hover:scale-105 transition duration-500" />
-      </div>
-      <div className="overflow-hidden rounded-lg shadow-md aspect-square">
-        <img src={Image3} alt="Delivery service" className="w-full h-full object-cover hover:scale-105 transition duration-500" />
-      </div>
-      <div className="overflow-hidden rounded-lg shadow-md aspect-square">
-        <img src={Image4} alt="Delivery service" className="w-full h-full object-cover hover:scale-105 transition duration-500" />
-      </div>
-      <div className="overflow-hidden rounded-lg shadow-md aspect-square">
-        <img src={Image5} alt="Delivery service" className="w-full h-full object-cover hover:scale-105 transition duration-500" />
-      </div>
-      <div className="overflow-hidden rounded-lg shadow-md aspect-square">
-        <img src={Image6} alt="Delivery service" className="w-full h-full object-cover hover:scale-105 transition duration-500" />
-      </div>
-    </div>
-    
-    <div className="flex justify-center">
-      <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-10 rounded-lg transition duration-300 shadow-md">
-        Swift
-      </button>
-    </div>
-  </div>
-</section>
+      <section className="py-12 md:py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-center mb-8">
+            <img src={Logo} alt="Swift Logo" className="w-40 md:w-48" />
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-10">
+            <div className="overflow-hidden rounded-lg shadow-md aspect-square">
+              <img
+                src={Image2}
+                alt="Delivery service"
+                className="w-full h-full object-cover hover:scale-105 transition duration-500"
+              />
+            </div>
+            <div className="overflow-hidden rounded-lg shadow-md aspect-square">
+              <img
+                src={Image3}
+                alt="Delivery service"
+                className="w-full h-full object-cover hover:scale-105 transition duration-500"
+              />
+            </div>
+            <div className="overflow-hidden rounded-lg shadow-md aspect-square">
+              <img
+                src={Image4}
+                alt="Delivery service"
+                className="w-full h-full object-cover hover:scale-105 transition duration-500"
+              />
+            </div>
+            <div className="overflow-hidden rounded-lg shadow-md aspect-square">
+              <img
+                src={Image5}
+                alt="Delivery service"
+                className="w-full h-full object-cover hover:scale-105 transition duration-500"
+              />
+            </div>
+            <div className="overflow-hidden rounded-lg shadow-md aspect-square">
+              <img
+                src={Image6}
+                alt="Delivery service"
+                className="w-full h-full object-cover hover:scale-105 transition duration-500"
+              />
+            </div>
+          </div>
+
+          <div className="flex justify-center">
+            <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-10 rounded-lg transition duration-300 shadow-md">
+              Swift
+            </button>
+          </div>
+        </div>
+      </section>
 
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-4">
